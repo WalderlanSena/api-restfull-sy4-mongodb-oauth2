@@ -16,11 +16,25 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class UserController extends FOSRestController
 {
+    private $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     public function getAction()
     {
-        $doctrine = $this->container->get('doctrine_mongodb')
-                                    ->getManager()
-                                    ->getRepository(User::class)->findAllOrderedByName();
+//        $doctrine = $this->container->get('doctrine_mongodb')
+//                                    ->getManager()
+//                                    ->getRepository(User::class)->findAllOrderedByName();
+        $doctrine = '';
+        try {
+            $doctrine = $this->userService->findAllOrderByName();
+        } catch (\Exception $exception) {
+
+        }
+
         return new JsonResponse([
             'status' => true,
             'data'   => $doctrine,

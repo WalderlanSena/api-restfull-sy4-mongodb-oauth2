@@ -9,7 +9,7 @@
 namespace App\Service;
 
 use App\Document\User;
-use Doctrine\ODM\MongoDB\DocumentRepository;
+use Doctrine\ODM\MongoDB\DocumentManager;
 
 /**
  * Class UserService
@@ -17,5 +17,26 @@ use Doctrine\ODM\MongoDB\DocumentRepository;
  */
 class UserService
 {
+    private $documentManager;
 
+    public function __construct(DocumentManager $documentManager)
+    {
+        $this->documentManager = $documentManager;
+    }
+
+    /**
+     * @return mixed
+     * @throws \Exception
+     */
+    public function findAllOrderByName()
+    {
+        try {
+            $response = $this->documentManager->getRepository(User::class)
+                                                 ->findAllOrderedByName();
+        } catch (\Exception $exception) {
+            throw new \Exception($exception->getMessage());
+        }
+
+        return $response;
+    }
 }

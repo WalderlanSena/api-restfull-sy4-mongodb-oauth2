@@ -30,7 +30,6 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    user:
-        class: App\Service\UserService
-        public: true
-        autowire: true
+    App\Service\UserService:
+        arguments:
+            - '@Doctrine\ODM\MongoDB\DocumentManager'
