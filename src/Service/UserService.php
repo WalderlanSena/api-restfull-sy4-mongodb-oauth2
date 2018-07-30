@@ -28,15 +28,21 @@ class UserService
      * @return mixed
      * @throws \Exception
      */
-    public function findAllOrderByName()
+    public function findAllOrderBy()
     {
         try {
-            $response = $this->documentManager->getRepository(User::class)
-                                                 ->findAllOrderedByName();
+            $response = $this->documentManager->getRepository(User::class)->findAllOrderedBy();
         } catch (\Exception $exception) {
             throw new \Exception($exception->getMessage());
         }
 
+        sort($response);
+
         return $response;
+    }
+
+    public function insertUser($request)
+    {
+        return $this->documentManager->getRepository(User::class)->insert($request);
     }
 }

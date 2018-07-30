@@ -1,4 +1,10 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: Walderlan Sena <senawalderlan@gmail.com>
+ * Date: 27/07/18
+ * Time: 19:25
+ */
 
 namespace App\Controller;
 
@@ -25,14 +31,16 @@ class UserController extends FOSRestController
 
     public function getAction()
     {
-//        $doctrine = $this->container->get('doctrine_mongodb')
-//                                    ->getManager()
-//                                    ->getRepository(User::class)->findAllOrderedByName();
-        $doctrine = '';
         try {
-            $doctrine = $this->userService->findAllOrderByName();
+            $doctrine = $this->userService->findAllOrderBy();
         } catch (\Exception $exception) {
-
+            return new JsonResponse([
+                'status' => false,
+                'data'   => null,
+                'errors' => [
+                    'Não foi possível concluir a requisição Erro: '. $exception->getMessage()
+                ],
+            ]);
         }
 
         return new JsonResponse([
@@ -50,20 +58,14 @@ class UserController extends FOSRestController
     {
         $request = json_decode($request->getContent());
 
-        $doctrine = $this->container->get('doctrine_mongodb')->getManager();
-
-        $user = new User();
-        $user->setNome($request->nome);
-        $user->setIdade($request->idade);
-
-        $doctrine->persist($user);
-        $doctrine->flush();
+        $user = $this->userService->insertUser($request);
 
         return new JsonResponse([
             'status'    => true,
             'message'   => 'Novo usuario cadastrado com sucesso !',
             'data'      => [
                 'nome'  => $user->getNome(),
+                'email' => $user->getEmail(),
                 'idade' => $user->getIdade()
             ],
             'errors'    => null

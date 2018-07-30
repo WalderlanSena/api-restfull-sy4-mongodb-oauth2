@@ -10,25 +10,37 @@ namespace App\Repository;
 
 use App\Document\User;
 use Doctrine\ODM\MongoDB\DocumentRepository;
-use Doctrine\ODM\MongoDB\MongoDBException;
 
 class UserRepository extends DocumentRepository
 {
     /**
-     * @return mixed
-     * @throws \Exception
+     * @return array
      */
-    public function findAllOrderedByName()
+    public function findAllOrderedBy()
     {
-        $response = $this->createQueryBuilder()->exclude('nome')->getQuery()->execute();
-//        $response = $this->createQueryBuilder()
-//        try {
-//            $response = $this->getDocumentManager()->getRepository(User::class)->findAll();
-//        } catch (MongoDBException $exception) {
-//            throw new \Exception($exception->getMessage());
-//        }
-
+        $response = $this->getDocumentManager()->createQueryBuilder()
+                                               ->find(User::class)
+                                                ->getQuery()->toArray();
         return $response;
+    }
+
+    /**
+     * @param $request
+     * @return User
+     */
+    public function insert($request)
+    {
+        $doctrine = $this->getDocumentManager();
+
+        $user = new User();
+        $user->setNome($request->nome);
+        $user->setEmail($request->email);
+        $user->setIdade($request->idade);
+
+        $doctrine->persist($user);
+        $doctrine->flush();
+
+        return $user;
     }
 
 }

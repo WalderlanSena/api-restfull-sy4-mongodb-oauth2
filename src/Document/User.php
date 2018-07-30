@@ -13,7 +13,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 /**
  * Class User
  * @package App\Document
- * @MongoDB\Document(repositoryClass="\App\Repository\UserRepository")
+ * @MongoDB\Document(repositoryClass="\App\Repository\UserRepository", collection="user")
  */
 class User
 {
@@ -33,6 +33,12 @@ class User
      * @MongoDB\Field(type="int")
      */
     public $idade;
+
+    /**
+     * @var string
+     * @MongoDB\Field(type="string")
+     */
+    public $email;
 
     /**
      * @return mixed
@@ -67,6 +73,24 @@ class User
     public function setNome(string $nome): User
     {
         $this->nome = $nome;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param string $email
+     * @return User
+     */
+    public function setEmail(string $email): User
+    {
+        $this->email = $email;
         return $this;
     }
 
