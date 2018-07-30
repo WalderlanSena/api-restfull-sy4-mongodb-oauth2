@@ -58,7 +58,17 @@ class UserController extends FOSRestController
     {
         $request = json_decode($request->getContent());
 
-        $user = $this->userService->insertUser($request);
+        try {
+            $user = $this->userService->insertUser($request);
+        } catch (\Exception $exception) {
+            return new JsonResponse([
+                'status' => false,
+                'data'   => null,
+                'errors' => [
+                    'Não foi possível concluir a requisição Erro: '. $exception->getMessage()
+                ],
+            ]);
+        }
 
         return new JsonResponse([
             'status'    => true,

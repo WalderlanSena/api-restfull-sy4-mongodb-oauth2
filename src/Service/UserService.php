@@ -19,6 +19,10 @@ class UserService
 {
     private $documentManager;
 
+    /**
+     * UserService constructor.
+     * @param DocumentManager $documentManager
+     */
     public function __construct(DocumentManager $documentManager)
     {
         $this->documentManager = $documentManager;
@@ -41,8 +45,19 @@ class UserService
         return $response;
     }
 
+    /**
+     * @param $request
+     * @return User
+     * @throws \Exception
+     */
     public function insertUser($request)
     {
-        return $this->documentManager->getRepository(User::class)->insert($request);
+        try {
+            $response = $this->documentManager->getRepository(User::class)->insert($request);
+        } catch (\Exception $exception) {
+            throw new \Exception($exception->getMessage());
+        }
+
+        return $response;
     }
 }

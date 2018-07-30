@@ -15,18 +15,24 @@ class UserRepository extends DocumentRepository
 {
     /**
      * @return array
+     * @throws \Exception
      */
     public function findAllOrderedBy()
     {
-        $response = $this->getDocumentManager()->createQueryBuilder()
-                                               ->find(User::class)
-                                                ->getQuery()->toArray();
+        try {
+            $response = $this->getDocumentManager()->createQueryBuilder()->find(User::class)
+                                                                         ->getQuery()->toArray();
+        } catch (\Exception $exception) {
+            throw new \Exception($exception->getMessage());
+        }
+
         return $response;
     }
 
     /**
      * @param $request
      * @return User
+     * @throws \Exception
      */
     public function insert($request)
     {
@@ -37,8 +43,12 @@ class UserRepository extends DocumentRepository
         $user->setEmail($request->email);
         $user->setIdade($request->idade);
 
-        $doctrine->persist($user);
-        $doctrine->flush();
+        try {
+            $doctrine->persist($user);
+            $doctrine->flush();
+        } catch (\Exception $exception) {
+            throw new \Exception($exception->getMessage());
+        }
 
         return $user;
     }
